@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RentFlow</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --white: #FFFFFF;
+    --bg: #F5F5F7;
+    --bg2: #FBFBFD;
+    --surface: #FFFFFF;
+    --border: #E8E8ED;
+    --text-primary: #1D1D1F;
+    --text-secondary: #6E6E73;
+    --text-tertiary: #AEAEB2;
+    --accent: #0071E3;
+    --accent-hover: #0077ED;
+    --accent-light: #E8F0FB;
+    --success: #34C759;
+    --warning: #FF9F0A;
+    --danger: #FF3B30;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ══════════════════════════════════
+     SCREEN 1 — LANDING / HERO
+  ══════════════════════════════════ */
+  #screen-landing {
+    background: #000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .landing-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, #0a3a6e 0%, #041d3d 40%, #000 100%);
+    z-index: 0;
+  }
+
+  .landing-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 50% 70% at 70% 30%, rgba(0, 113, 227, 0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 40% at 20% 70%, rgba(0, 60, 150, 0.2) 0%, transparent 60%);
+  }
+
+  .landing-nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    z-index: 10;
+  }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    font-size: 14px; font-weight: 700; color: white; letter-spacing: -0.5px;
+  }
+
+  .landing-nav-links {
+    display: flex; gap: 32px;
+    list-style: none;
+  }
+
+  .landing-nav-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .landing-nav-links a:hover { color: white; }
+
+  .landing-content {
+    position: relative;
+    z-index: 10;
+    text-align: left;
+    max-width: 680px;
+    padding: 0 48px;
+    width: 100%;
+  }
+
+  .landing-eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 20px;
+  }
+
+  .landing-title {
+    font-size: clamp(56px, 8vw, 88px);
+    font-weight: 600;
+    color: white;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+
+  .landing-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 420px;
+    margin-bottom: 48px;
+  }
+
+  .landing-actions { display: flex; gap: 12px; align-items: center; }
+
+  .btn-primary-dark {
+    background: white;
+    color: #1D1D1F;
+    border: none;
+    padding: 13px 28px;
+    border-radius: 980px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary-dark:hover { background: rgba(255,255,255,0.9); transform: scale(1.01); }
+
+  .btn-ghost-dark {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 13px 28px;
+    border-radius: 980px;
+    font-size: 15px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(10px);
+  }
+  .btn-ghost-dark:hover { color: white; border-color: rgba(255,255,255,0.4); }
+
+  /* ══════════════════════════════════
+     SCREEN 2 — LOGIN / REGISTER
+  ══════════════════════════════════ */
+  #screen-auth {
+    background: var(--bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .auth-card {
+    background: var(--surface);
+    border-radius: var(--radius-xl);
+    padding: 48px 44px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .auth-logo-icon {
+    width: 36px; height: 36px;
+    background: var(--text-primary);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: white;
+    letter-spacing: -0.5px;
+  }
+
+  .auth-logo-name {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .auth-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+
+  .auth-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 36px;
+    line-height: 1.5;
+  }
+
+  .auth-tabs {
+    display: flex;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    margin-bottom: 28px;
+    gap: 2px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .auth-tab.active {
+    background: white;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .field-group { margin-bottom: 16px; }
+
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .field-input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--bg);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: var(--font);
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s;
+  }
+  .field-input:focus {
+    border-color: var(--accent);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+  }
+  .field-input::placeholder { color: var(--text-tertiary); }
+
+  .security-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F0FFF4;
+    border: 1px solid #C6F6D5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+  }
+  .security-badge span { font-size: 13px; color: #276749; font-weight: 400; }
+
+  .btn-full {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+  .btn-full:hover { background: var(--accent-hover); transform: translateY(-0.5px); box-shadow: 0 4px 12px rgba(0,113,227,0.3); }
+
+  /* ══════════════════════════════════
+     SCREEN 3 — APP PRINCIPAL
+  ══════════════════════════════════ */
+  #screen-app {
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 100vh;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .sidebar-logo-icon {
+    width: 30px; height: 30px;
+    background: var(--text-primary);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white;
+  }
+
+  .sidebar-logo-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .sidebar-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    padding: 8px 20px 4px;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    border-radius: var(--radius-sm);
+    margin: 1px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .sidebar-item:hover { background: var(--bg); color: var(--text-primary); }
+  .sidebar-item.active {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .sidebar-item-icon {
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    opacity: 0.7;
+  }
+  .sidebar-item.active .sidebar-item-icon { opacity: 1; }
+
+  .sidebar-badge {
+    margin-left: auto;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 12px 10px 4px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    background: var(--bg);
+  }
+
+  .topbar {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topbar-crumb {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+  }
+  .topbar-crumb.active {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: white;
+    cursor: pointer;
+  }
+
+  .content-area {
+    padding: 32px;
+    flex: 1;
+  }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .page-sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  /* ─── YEAR SELECTOR ─── */
+  .year-tabs {
+    display: flex;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+    gap: 2px;
+    box-shadow: var(--shadow-sm);
+  }
+  .year-tab {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .year-tab.active { background: var(--text-primary); color: white; }
+
+  /* ─── STAT CARDS ─── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-change {
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .stat-change.up { color: var(--success); }
+  .stat-change.down { color: var(--danger); }
+  .stat-change.neutral { color: var(--text-tertiary); }
+
+  .stat-card.accent-blue { border-top: 2.5px solid var(--accent); }
+  .stat-card.accent-green { border-top: 2.5px solid var(--success); }
+  .stat-card.accent-orange { border-top: 2.5px solid var(--warning); }
+  .stat-card.accent-red { border-top: 2.5px solid var(--danger); }
+
+  /* ─── CARDS GRID ─── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+
+  /* ─── PROPERTY CARD ─── */
+  .property-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .property-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+  .property-card-header {
+    background: linear-gradient(135deg, #1D1D1F 0%, #3A3A3C 100%);
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    min-height: 80px;
+  }
+
+  .property-card-header.blue { background: linear-gradient(135deg, #0071E3 0%, #005FC0 100%); }
+  .property-card-header.teal { background: linear-gradient(135deg, #00897B 0%, #005951 100%); }
+  .property-card-header.purple { background: linear-gradient(135deg, #5E5CE6 0%, #3A3AB0 100%); }
+
+  .property-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .property-type-badge {
+    background: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+
+  .property-card-body { padding: 18px 20px; }
+
+  .property-address {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .property-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+
+  .property-info-item { }
+  .property-info-label { font-size: 11px; color: var(--text-tertiary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+  .property-info-val { font-size: 17px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em; margin-top: 2px; }
+
+  .progress-bar-wrap { margin-bottom: 12px; }
+  .progress-bar-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .progress-bar-label { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+  .progress-bar-pct { font-size: 11px; color: var(--accent); font-weight: 600; }
+  .progress-bar-bg { background: var(--bg); height: 5px; border-radius: 3px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.6s ease; }
+  .progress-bar-fill.green { background: var(--success); }
+  .progress-bar-fill.orange { background: var(--warning); }
+
+  /* ─── INQUILINOS / PAGOS ─── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .btn-sm {
+    background: var(--accent-light);
+    color: var(--accent);
+    border: none;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-sm:hover { background: var(--accent); color: white; }
+
+  /* ─── TENANT ROW ─── */
+  .tenant-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .tenant-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: white;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    gap: 14px;
+  }
+  .tenant-row:hover { box-shadow: var(--shadow-sm); border-color: rgba(0,113,227,0.2); }
+
+  .tenant-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: #555;
+    flex-shrink: 0;
+  }
+
+  .tenant-info { flex: 1; min-width: 0; }
+  .tenant-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .tenant-prop { font-size: 12px; color: var(--text-tertiary); margin-top: 1px; }
+
+  .tenant-month { font-size: 12px; color: var(--text-secondary); text-align: right; }
+  .tenant-amount { font-size: 15px; font-weight: 600; color: var(--text-primary); text-align: right; letter-spacing: -0.02em; }
+
+  .status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .status-paid { background: #E8FFF0; color: #1A7A3C; }
+  .status-partial { background: #FFF8E8; color: #92600A; }
+  .status-pending { background: #FFF0F0; color: #9A2020; }
+
+  /* ─── PAYMENT DETAIL PANEL ─── */
+  .panel-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .panel-overlay.open { display: flex; }
+
+  .panel {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .panel-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 28px; height: 28px;
+    background: var(--bg);
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    transition: background 0.15s;
+  }
+  .panel-close:hover { background: var(--border); }
+
+  .panel-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .panel-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 28px; }
+
+  /* ─── MONTH PAYMENTS GRID ─── */
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .month-cell {
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .month-cell:hover { border-color: var(--accent); background: var(--accent-light); }
+  .month-cell.selected { border-color: var(--accent); background: var(--accent-light); }
+  .month-cell.paid { background: #E8FFF0; }
+  .month-cell.partial { background: #FFF8E8; }
+  .month-cell.empty {}
+
+  .month-cell-name { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+  .month-cell-val { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-top: 4px; letter-spacing: -0.02em; }
+  .month-cell-status { font-size: 10px; margin-top: 2px; font-weight: 500; }
+  .month-cell.paid .month-cell-status { color: #1A7A3C; }
+  .month-cell.partial .month-cell-status { color: #92600A; }
+
+  /* ─── ABONO FORM ─── */
+  .abono-section {
+    background: var(--bg);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-top: 16px;
+  }
+  .abono-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 14px; }
+
+  .abono-row {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+  }
+  .abono-date { font-size: 12px; color: var(--text-secondary); }
+  .abono-amount { font-size: 14px; font-weight: 600; color: var(--success); }
+
+  .balance-box {
+    background: linear-gradient(135deg, var(--accent) 0%, #005FC0 100%);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+  }
+  .balance-label { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+  .balance-amount { font-size: 22px; font-weight: 700; color: white; letter-spacing: -0.03em; }
+  .balance-box.zero { background: linear-gradient(135deg, var(--success), #28A745); }
+
+  /* ─── MODAL ADD PROP ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-title { font-size: 20px; font-weight: 600; letter-spacing: -0.03em; color: var(--text-primary); margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 28px; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+
+  .btn-cancel {
+    flex: 1;
+    background: var(--bg);
+    color: var(--text-secondary);
+    border: none;
+    padding: 13px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-cancel:hover { background: var(--border); color: var(--text-primary); }
+
+  .btn-save {
+    flex: 2;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-save:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(0,113,227,0.3); }
+
+  /* ─── GLOBAL DASHBOARD ─── */
+  .chart-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+
+  .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .chart-title { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em; }
+
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; }
+  .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar { width: 100%; border-radius: 5px 5px 0 0; background: var(--accent-light); transition: all 0.3s; cursor: pointer; min-height: 4px; }
+  .bar:hover { background: var(--accent); }
+  .bar.active { background: var(--accent); }
+  .bar-label { font-size: 9px; color: var(--text-tertiary); font-weight: 500; text-transform: uppercase; }
+
+  /* ─── NOTIFICATION TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--text-primary);
+    color: white;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 300px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: #1A7A3C; }
+  .toast.error { background: #9A2020; }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-title { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; color: var(--text-tertiary); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .sidebar { display: none; }
+    .content-area { padding: 20px 16px; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+
+  /* ─── UTILS ─── */
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .mt-4 { margin-top: 16px; }
+  .mt-6 { margin-top: 24px; }
+  .mb-4 { margin-bottom: 16px; }
+  .text-sm { font-size: 13px; }
+  .text-xs { font-size: 11px; }
+  .text-secondary { color: var(--text-secondary); }
+  .font-semibold { font-weight: 600; }
+  .w-full { width: 100%; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+  SCREEN 1: LANDING
+══════════════════════════════ -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-bg"></div>
+  <nav class="landing-nav">
+    <div class="logo-mark">RF</div>
+    <ul class="landing-nav-links">
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Características</a></li>
+      <li><a href="#">Precios</a></li>
+    </ul>
+    <div style="width:32px"></div>
+  </nav>
+  <div class="landing-content">
+    <p class="landing-eyebrow">Gestión de arriendos</p>
+    <h1 class="landing-title">RentFlow</h1>
+    <p class="landing-sub">Gestiona tus propiedades en arriendo tradicional y renta corta. Control total de pagos, abonos e inquilinos en un solo lugar.</p>
+    <div class="landing-actions">
+      <button class="btn-primary-dark" onclick="goToScreen('screen-auth')">Comenzar gratis</button>
+      <button class="btn-ghost-dark" onclick="goToScreen('screen-auth')">Iniciar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+  SCREEN 2: AUTH
+══════════════════════════════ -->
+<div id="screen-auth" class="screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">RF</div>
+      <span class="auth-logo-name">RentFlow</span>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab(this, 'login')">Iniciar sesión</button>
+      <button class="auth-tab" onclick="switchAuthTab(this, 'register')">Crear cuenta</button>
+    </div>
+
+    <div id="auth-login">
+      <h2 class="auth-title">Bienvenido de nuevo</h2>
+      <p class="auth-sub">Ingresa tus datos para acceder a tu panel.</p>
+      <div class="field-group">
+        <label class="field-label">Correo electrónico</label>
+        <input class="field-input" type="email" placeholder="correo@ejemplo.com" id="login-email">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Contraseña</label>
+        <input class="field-input" type="password" placeholder="••••••••" id="login-pass">
+      </div>
+      <div class="security-badge">
+        <span>🔒</span>
+        <span>Cifrado AES-256 · Sesión autenticada con token seguro</span>
+      </div>
+      <button class="btn-full" onclick="doLogin()">Ingresar</button>
+    </div>
+
+    <div id="auth-register" style="display:none">
+      <h2 class="auth-title">Crear cuenta</h2>
+      <p class="auth-sub">Registra tus datos para comenzar a gestionar tus propiedades.</p>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Nombre</label>
+          <input class="field-input" type="text" placeholder="Juan">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Apellido</label>
+          <input class="field-input" type="text" placeholder="García">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Correo electrónico</label>
+        <input class="field-input" type="email" placeholder="correo@ejemplo.com" id="reg-email">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Contraseña</label>
+        <input class="field-input" type="password" placeholder="Mínimo 8 caracteres" id="reg-pass">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Confirmar contraseña</label>
+        <input class="field-input" type="password" placeholder="Repite tu contraseña">
+      </div>
+      <div class="security-badge">
+        <span>🔒</span>
+        <span>Datos cifrados · Sin acceso de terceros</span>
+      </div>
+      <button class="btn-full" onclick="doRegister()">Crear cuenta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+  SCREEN 3: APP
+══════════════════════════════ -->
+<div id="screen-app" class="screen">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">RF</div>
+      <span class="sidebar-logo-text">RentFlow</span>
+    </div>
+
+    <p class="sidebar-section-label">General</p>
+    <a class="sidebar-item" onclick="showView('view-dashboard')">
+      <span class="sidebar-item-icon">📊</span> Panel Global
+    </a>
+
+    <p class="sidebar-section-label" style="margin-top:8px">Arriendo Tradicional</p>
+    <a class="sidebar-item active" onclick="showView('view-propiedades')">
+      <span class="sidebar-item-icon">🏠</span> Propiedades
+    </a>
+    <a class="sidebar-item" onclick="showView('view-inquilinos')">
+      <span class="sidebar-item-icon">👥</span> Inquilinos
+      <span class="sidebar-badge" id="badge-pendientes">2</span>
+    </a>
+    <a class="sidebar-item" onclick="showView('view-pagos')">
+      <span class="sidebar-item-icon">💳</span> Pagos & Abonos
+    </a>
+
+    <p class="sidebar-section-label" style="margin-top:8px">Renta Corta</p>
+    <a class="sidebar-item" onclick="comingSoon()">
+      <span class="sidebar-item-icon">🏨</span> Propiedades
+    </a>
+    <a class="sidebar-item" onclick="comingSoon()">
+      <span class="sidebar-item-icon">📅</span> Reservas
+    </a>
+
+    <div class="sidebar-bottom">
+      <a class="sidebar-item" onclick="comingSoon()">
+        <span class="sidebar-item-icon">⚙️</span> Configuración
+      </a>
+      <a class="sidebar-item" onclick="logout()">
+        <span class="sidebar-item-icon">↩️</span> Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-crumb">RentFlow</span>
+        <span class="topbar-crumb" style="margin:0 4px;color:var(--text-tertiary)">›</span>
+        <span class="topbar-crumb active" id="topbar-current">Propiedades</span>
+      </div>
+      <div class="topbar-right">
+        <div class="year-tabs" id="year-selector">
+          <button class="year-tab" onclick="setYear(2024,this)">2024</button>
+          <button class="year-tab active" onclick="setYear(2025,this)">2025</button>
+          <button class="year-tab" onclick="setYear(2026,this)">2026</button>
+        </div>
+        <div class="avatar" title="Mi cuenta" onclick="comingSoon()">JG</div>
+      </div>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content-area">
+
+      <!-- ─── VIEW: PROPIEDADES ─── -->
+      <div id="view-propiedades" class="view-section">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Propiedades</h1>
+            <p class="page-sub">Arriendo tradicional · <span id="prop-count">2</span> propiedades registradas</p>
+          </div>
+          <button class="btn-sm" style="background:var(--accent);color:white;padding:10px 18px;font-size:14px;" onclick="openModal('modal-add-prop')">
+            + Agregar propiedad
+          </button>
+        </div>
+
+        <div class="cards-grid" id="prop-grid">
+          <!-- Se renderizan dinámicamente -->
+        </div>
+      </div>
+
+      <!-- ─── VIEW: INQUILINOS ─── -->
+      <div id="view-inquilinos" class="view-section" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Inquilinos</h1>
+            <p class="page-sub">Gestiona los inquilinos de todas tus propiedades</p>
+          </div>
+          <button class="btn-sm" style="background:var(--accent);color:white;padding:10px 18px;font-size:14px;" onclick="openModal('modal-add-tenant')">
+            + Agregar inquilino
+          </button>
+        </div>
+        <div class="tenant-list" id="tenant-list-main"></div>
+      </div>
+
+      <!-- ─── VIEW: PAGOS ─── -->
+      <div id="view-pagos" class="view-section" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Pagos & Abonos</h1>
+            <p class="page-sub">Historial mensual de pagos por inquilino</p>
+          </div>
+        </div>
+        <div class="tenant-list" id="tenant-list-pagos"></div>
+      </div>
+
+      <!-- ─── VIEW: DASHBOARD ─── -->
+      <div id="view-dashboard" class="view-section" style="display:none">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Panel Global</h1>
+            <p class="page-sub">Resumen de ingresos, egresos y estado de cobros</p>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card accent-blue">
+            <div class="stat-label">Ingresos totales</div>
+            <div class="stat-value" id="dash-ingresos">$0</div>
+            <div class="stat-change up">↑ Arriendo tradicional</div>
+          </div>
+          <div class="stat-card accent-green">
+            <div class="stat-label">Cobrado este mes</div>
+            <div class="stat-value" id="dash-cobrado">$0</div>
+            <div class="stat-change neutral">Mes actual</div>
+          </div>
+          <div class="stat-card accent-orange">
+            <div class="stat-label">Pendiente por cobrar</div>
+            <div class="stat-value" id="dash-pendiente">$0</div>
+            <div class="stat-change down">Por gestionar</div>
+          </div>
+          <div class="stat-card accent-red">
+            <div class="stat-label">Propiedades activas</div>
+            <div class="stat-value" id="dash-props">0</div>
+            <div class="stat-change neutral">Registradas</div>
+          </div>
+        </div>
+        <div class="chart-card mt-4">
+          <div class="chart-header">
+            <span class="chart-title">Ingresos por mes</span>
+            <span class="text-sm text-secondary" id="dash-year-label">2025</span>
+          </div>
+          <div class="bar-chart" id="bar-chart"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════════════════
+  MODALES
+══════════════════════════════ -->
+
+<!-- Modal: Agregar propiedad -->
+<div class="modal-overlay" id="modal-add-prop">
+  <div class="modal">
+    <button class="panel-close" onclick="closeModal('modal-add-prop')">✕</button>
+    <h2 class="modal-title">Nueva propiedad</h2>
+    <p class="modal-sub">Arriendo tradicional</p>
+    <div class="field-group">
+      <label class="field-label">Nombre de la propiedad</label>
+      <input class="field-input" type="text" placeholder="Ej: Apto 301 Torres del Parque" id="new-prop-name">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Dirección</label>
+      <input class="field-input" type="text" placeholder="Calle, número, ciudad" id="new-prop-address">
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Valor mensual arriendo</label>
+        <input class="field-input" type="number" placeholder="1.200.000" id="new-prop-rent">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Color de tarjeta</label>
+        <select class="field-input" id="new-prop-color">
+          <option value="">Oscuro (default)</option>
+          <option value="blue">Azul</option>
+          <option value="teal">Verde</option>
+          <option value="purple">Morado</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-add-prop')">Cancelar</button>
+      <button class="btn-save" onclick="addProperty()">Guardar propiedad</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Agregar inquilino -->
+<div class="modal-overlay" id="modal-add-tenant">
+  <div class="modal">
+    <button class="panel-close" onclick="closeModal('modal-add-tenant')">✕</button>
+    <h2 class="modal-title">Nuevo inquilino</h2>
+    <p class="modal-sub">Asignar a una propiedad</p>
+    <div class="field-group">
+      <label class="field-label">Nombre completo</label>
+      <input class="field-input" type="text" placeholder="Nombre del inquilino" id="new-tenant-name">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Propiedad asignada</label>
+      <select class="field-input" id="new-tenant-prop"></select>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Valor mensual</label>
+        <input class="field-input" type="number" placeholder="1.200.000" id="new-tenant-rent">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Mes inicio</label>
+        <input class="field-input" type="month" id="new-tenant-start">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-add-tenant')">Cancelar</button>
+      <button class="btn-save" onclick="addTenant()">Guardar inquilino</button>
+    </div>
+  </div>
+</div>
+
+<!-- Panel: Detalle pagos inquilino -->
+<div class="panel-overlay" id="panel-tenant">
+  <div class="panel">
+    <button class="panel-close" onclick="closePanel('panel-tenant')">✕</button>
+    <h2 class="panel-title" id="panel-tenant-name">Inquilino</h2>
+    <p class="panel-sub" id="panel-tenant-sub">Propiedad · Valor mensual</p>
+
+    <div class="section-header">
+      <span class="section-title">Pagos por mes</span>
+      <button class="btn-sm" id="btn-add-abono" onclick="showAbonoForm()">+ Registrar abono</button>
+    </div>
+
+    <div class="month-grid" id="month-grid"></div>
+
+    <!-- Abono form (hidden) -->
+    <div id="abono-form" style="display:none">
+      <div class="abono-section">
+        <div class="abono-title" id="abono-form-title">Registrar abono — Enero</div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Monto del abono</label>
+            <input class="field-input" type="number" placeholder="500.000" id="abono-amount-input" style="background:white">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Fecha</label>
+            <input class="field-input" type="date" id="abono-date-input" style="background:white">
+          </div>
+        </div>
+        <div class="modal-actions" style="margin-top:12px">
+          <button class="btn-cancel" onclick="hideAbonoForm()">Cancelar</button>
+          <button class="btn-save" onclick="registerAbono()">Registrar abono</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial abonos -->
+    <div id="abono-history" style="margin-top:16px"></div>
+
+    <!-- Balance -->
+    <div id="balance-box-wrap"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════
+  JAVASCRIPT
+══════════════════════════════ -->
+<script>
+// ─── STATE ───
+const MONTHS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const MONTHS_FULL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let currentUser = null;
+let currentYear = 2025;
+let activeTenantId = null;
+let activeMonthIdx = null;
+
+// Carga datos desde localStorage o seed demo
+function loadData() {
+  const raw = localStorage.getItem('rentflow_data');
+  if (raw) return JSON.parse(raw);
+  // SEED DEMO
+  return {
+    properties: [
+      { id: 'p1', name: 'Apto 301 Torres del Parque', address: 'Cra 7 # 26-20, Bogotá', rent: 1800000, color: 'blue' },
+      { id: 'p2', name: 'Casa Quinta Camacho', address: 'Cll 72 # 5-40, Bogotá', rent: 2500000, color: 'teal' }
+    ],
+    tenants: [
+      { id: 't1', name: 'Carlos Mendoza', propId: 'p1', rent: 1800000, startMonth: '2024-01' },
+      { id: 't2', name: 'Laura Ríos', propId: 'p2', rent: 2500000, startMonth: '2024-03' }
+    ],
+    payments: {
+      // key: `tenantId_year_monthIdx` => { abonos: [{amount, date}] }
+      't1_2025_0': { abonos: [{amount:1800000, date:'2025-01-05'}] },
+      't1_2025_1': { abonos: [{amount:900000, date:'2025-02-03'}, {amount:900000, date:'2025-02-18'}] },
+      't1_2025_2': { abonos: [{amount:500000, date:'2025-03-01'}] },
+      't2_2025_0': { abonos: [{amount:2500000, date:'2025-01-02'}] },
+      't2_2025_1': { abonos: [{amount:2500000, date:'2025-02-01'}] },
+    }
+  };
+}
+
+function saveData(data) {
+  localStorage.setItem('rentflow_data', JSON.stringify(data));
+}
+
+let DB = loadData();
+
+// ─── NAVIGATION ───
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showView(id) {
+  document.querySelectorAll('.view-section').forEach(v => v.style.display = 'none');
+  document.getElementById(id).style.display = '';
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  event?.currentTarget?.classList?.add('active');
+  // Update topbar
+  const labels = { 'view-propiedades': 'Propiedades', 'view-inquilinos': 'Inquilinos', 'view-pagos': 'Pagos & Abonos', 'view-dashboard': 'Panel Global' };
+  document.getElementById('topbar-current').textContent = labels[id] || id;
+  if (id === 'view-propiedades') renderProperties();
+  if (id === 'view-inquilinos') renderTenantList('tenant-list-main');
+  if (id === 'view-pagos') renderTenantList('tenant-list-pagos');
+  if (id === 'view-dashboard') renderDashboard();
+}
+
+function setYear(y, btn) {
+  currentYear = y;
+  document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dash-year-label').textContent = y;
+  renderDashboard();
+}
+
+// ─── AUTH ───
+function switchAuthTab(btn, tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('auth-login').style.display = tab === 'login' ? '' : 'none';
+  document.getElementById('auth-register').style.display = tab === 'register' ? '' : 'none';
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { showToast('Ingresa tu correo y contraseña', 'error'); return; }
+  currentUser = { email, initials: email.slice(0,2).toUpperCase() };
+  document.querySelector('.avatar').textContent = currentUser.initials;
+  showToast('¡Bienvenido de nuevo!', 'success');
+  goToScreen('screen-app');
+  renderProperties();
+}
+
+function doRegister() {
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  if (!email || pass.length < 8) { showToast('Contraseña mínimo 8 caracteres', 'error'); return; }
+  currentUser = { email, initials: email.slice(0,2).toUpperCase() };
+  document.querySelector('.avatar').textContent = currentUser.initials;
+  showToast('Cuenta creada exitosamente', 'success');
+  goToScreen('screen-app');
+  renderProperties();
+}
+
+function logout() {
+  currentUser = null;
+  goToScreen('screen-landing');
+}
+
+// ─── RENDER: PROPIEDADES ───
+function renderProperties() {
+  const grid = document.getElementById('prop-grid');
+  const count = DB.properties.length;
+  document.getElementById('prop-count').textContent = count;
+  document.getElementById('dash-props').textContent = count;
+
+  if (count === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🏠</div><div class="empty-title">Sin propiedades</div><div class="empty-sub">Agrega tu primera propiedad con el botón de arriba</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = DB.properties.map(p => {
+    const tenants = DB.tenants.filter(t => t.propId === p.id);
+    const paymentStatus = calcPropertyPayment(p, tenants);
+    return `
+    <div class="property-card" onclick="openPropertyDetail('${p.id}')">
+      <div class="property-card-header ${p.color || ''}">
+        <div class="property-name">${p.name}</div>
+        <span class="property-type-badge">Tradicional</span>
+      </div>
+      <div class="property-card-body">
+        <div class="property-address">📍 ${p.address}</div>
+        <div class="property-info-row">
+          <div class="property-info-item">
+            <div class="property-info-label">Arriendo</div>
+            <div class="property-info-val">${formatCOP(p.rent)}</div>
+          </div>
+          <div class="property-info-item" style="text-align:right">
+            <div class="property-info-label">Inquilinos</div>
+            <div class="property-info-val">${tenants.length}</div>
+          </div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-header">
+            <span class="progress-bar-label">Cobrado este año</span>
+            <span class="progress-bar-pct">${paymentStatus.pct}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill ${paymentStatus.pct >= 80 ? 'green' : paymentStatus.pct >= 40 ? '' : 'orange'}"
+              style="width:${paymentStatus.pct}%"></div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-secondary">Cobrado: ${formatCOP(paymentStatus.collected)}</span>
+          <span class="text-xs" style="color:var(--danger)">Pendiente: ${formatCOP(paymentStatus.pending)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function calcPropertyPayment(prop, tenants) {
+  let totalDue = 0, totalPaid = 0;
+  tenants.forEach(t => {
+    for (let m = 0; m < 12; m++) {
+      const key = `${t.id}_${currentYear}_${m}`;
+      const paid = (DB.payments[key]?.abonos || []).reduce((a, b) => a + b.amount, 0);
+      if (paid > 0 || isMonthActive(t, m)) {
+        if (isMonthActive(t, m)) totalDue += t.rent;
+        totalPaid += paid;
+      }
+    }
+  });
+  const pct = totalDue > 0 ? Math.min(100, Math.round((totalPaid / totalDue) * 100)) : 0;
+  return { collected: totalPaid, pending: Math.max(0, totalDue - totalPaid), pct };
+}
+
+function isMonthActive(tenant, monthIdx) {
+  const [sy, sm] = (tenant.startMonth || '2020-01').split('-').map(Number);
+  const tenantMonth = (sy - currentYear) * 12 + (sm - 1);
+  return monthIdx >= (sy === currentYear ? sm - 1 : 0);
+}
+
+function openPropertyDetail(propId) {
+  // Go to inquilinos filtered by prop
+  showView('view-inquilinos');
+  renderTenantList('tenant-list-main', propId);
+}
+
+// ─── RENDER: TENANT LISTS ───
+function renderTenantList(containerId, filterPropId) {
+  const container = document.getElementById(containerId);
+  let tenants = DB.tenants;
+  if (filterPropId) tenants = tenants.filter(t => t.propId === filterPropId);
+
+  if (tenants.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">Sin inquilinos</div><div class="empty-sub">Agrega inquilinos con el botón de arriba</div></div>`;
+    return;
+  }
+
+  let pendingCount = 0;
+  container.innerHTML = tenants.map(t => {
+    const prop = DB.properties.find(p => p.id === t.propId);
+    const curMonth = new Date().getMonth();
+    const curMonthKey = `${t.id}_${currentYear}_${curMonth}`;
+    const paid = (DB.payments[curMonthKey]?.abonos || []).reduce((a, b) => a + b.amount, 0);
+    const balance = t.rent - paid;
+    let statusClass = 'status-paid', statusLabel = 'Al día';
+    if (balance > 0 && paid === 0) { statusClass = 'status-pending'; statusLabel = 'Pendiente'; pendingCount++; }
+    else if (balance > 0) { statusClass = 'status-partial'; statusLabel = 'Abono parcial'; }
+
+    const colors = ['linear-gradient(135deg,#a8edea,#fed6e3)', 'linear-gradient(135deg,#fccb90,#d57eeb)', 'linear-gradient(135deg,#a1c4fd,#c2e9fb)', 'linear-gradient(135deg,#fddb92,#d1fdff)'];
+    const ci = (t.id.charCodeAt(1)||0) % colors.length;
+
+    return `
+    <div class="tenant-row" onclick="openTenantPanel('${t.id}')">
+      <div class="tenant-avatar" style="background:${colors[ci]}">${t.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+      <div class="tenant-info">
+        <div class="tenant-name">${t.name}</div>
+        <div class="tenant-prop">${prop?.name || 'Sin propiedad'}</div>
+      </div>
+      <div style="text-align:right;margin-right:12px">
+        <div class="tenant-month">${MONTHS_FULL[curMonth]}</div>
+        <div class="tenant-amount">${formatCOP(t.rent)}</div>
+      </div>
+      <span class="status-pill ${statusClass}">${statusLabel}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('badge-pendientes').textContent = pendingCount;
+  if (pendingCount === 0) document.getElementById('badge-pendientes').style.display = 'none';
+  else document.getElementById('badge-pendientes').style.display = '';
+}
+
+// ─── TENANT PANEL ───
+function openTenantPanel(tenantId) {
+  activeTenantId = tenantId;
+  const t = DB.tenants.find(x => x.id === tenantId);
+  const prop = DB.properties.find(p => p.id === t.propId);
+  document.getElementById('panel-tenant-name').textContent = t.name;
+  document.getElementById('panel-tenant-sub').textContent = `${prop?.name || '—'} · ${formatCOP(t.rent)}/mes`;
+  renderMonthGrid(tenantId);
+  document.getElementById('panel-tenant').classList.add('open');
+  document.getElementById('abono-form').style.display = 'none';
+  document.getElementById('abono-history').innerHTML = '';
+  document.getElementById('balance-box-wrap').innerHTML = '';
+}
+
+function closePanel(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function renderMonthGrid(tenantId) {
+  const t = DB.tenants.find(x => x.id === tenantId);
+  const grid = document.getElementById('month-grid');
+  grid.innerHTML = MONTHS.map((m, i) => {
+    const key = `${tenantId}_${currentYear}_${i}`;
+    const paid = (DB.payments[key]?.abonos || []).reduce((a, b) => a + b.amount, 0);
+    const active = isMonthActive(t, i);
+    if (!active) return `<div class="month-cell empty"><div class="month-cell-name">${m}</div><div class="month-cell-val" style="color:var(--text-tertiary);font-size:11px">—</div></div>`;
+    const balance = t.rent - paid;
+    let cls = '', status = 'Sin pago';
+    if (paid >= t.rent) { cls = 'paid'; status = 'Pagado'; }
+    else if (paid > 0) { cls = 'partial'; status = `Abono: ${formatCOP(paid)}`; }
+    return `<div class="month-cell ${cls}" onclick="selectMonth(${i})">
+      <div class="month-cell-name">${m}</div>
+      <div class="month-cell-val">${paid >= t.rent ? formatCOP(paid) : (paid > 0 ? formatCOP(paid) : formatCOP(t.rent))}</div>
+      <div class="month-cell-status">${status}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectMonth(monthIdx) {
+  activeMonthIdx = monthIdx;
+  document.querySelectorAll('.month-cell').forEach((c, i) => {
+    if (i === monthIdx) c.classList.add('selected');
+    else c.classList.remove('selected');
+  });
+  renderAbonoHistory(activeTenantId, monthIdx);
+  renderBalance(activeTenantId, monthIdx);
+}
+
+function renderAbonoHistory(tenantId, monthIdx) {
+  const key = `${tenantId}_${currentYear}_${monthIdx}`;
+  const abonos = DB.payments[key]?.abonos || [];
+  const container = document.getElementById('abono-history');
+  if (abonos.length === 0) { container.innerHTML = `<p class="text-xs text-secondary" style="text-align:center;padding:10px 0">Sin abonos registrados para ${MONTHS_FULL[monthIdx]}</p>`; return; }
+  container.innerHTML = `<div class="abono-section"><div class="abono-title">Abonos — ${MONTHS_FULL[monthIdx]}</div>` +
+    abonos.map(a => `<div class="abono-row"><span class="abono-date">📅 ${a.date}</span><span class="abono-amount">+${formatCOP(a.amount)}</span></div>`).join('') +
+    `</div>`;
+}
+
+function renderBalance(tenantId, monthIdx) {
+  const t = DB.tenants.find(x => x.id === tenantId);
+  const key = `${tenantId}_${currentYear}_${monthIdx}`;
+  const paid = (DB.payments[key]?.abonos || []).reduce((a, b) => a + b.amount, 0);
+  const balance = t.rent - paid;
+  const wrap = document.getElementById('balance-box-wrap');
+  if (balance <= 0) {
+    wrap.innerHTML = `<div class="balance-box zero"><div><div class="balance-label">Saldo</div><div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:2px">${MONTHS_FULL[monthIdx]}</div></div><div><div class="balance-label">✅ Sin saldo pendiente</div><div class="balance-amount">$0</div></div></div>`;
+  } else {
+    wrap.innerHTML = `<div class="balance-box"><div><div class="balance-label">Saldo pendiente</div><div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:2px">${MONTHS_FULL[monthIdx]}</div></div><div class="balance-amount">${formatCOP(balance)}</div></div>`;
+  }
+}
+
+function showAbonoForm() {
+  if (activeMonthIdx === null) { showToast('Selecciona un mes primero', 'error'); return; }
+  document.getElementById('abono-form').style.display = '';
+  document.getElementById('abono-form-title').textContent = `Registrar abono — ${MONTHS_FULL[activeMonthIdx]}`;
+  document.getElementById('abono-date-input').value = new Date().toISOString().split('T')[0];
+}
+
+function hideAbonoForm() {
+  document.getElementById('abono-form').style.display = 'none';
+}
+
+function registerAbono() {
+  const amount = parseFloat(document.getElementById('abono-amount-input').value);
+  const date = document.getElementById('abono-date-input').value;
+  if (!amount || amount <= 0) { showToast('Ingresa un monto válido', 'error'); return; }
+  if (!date) { showToast('Selecciona la fecha', 'error'); return; }
+  const key = `${activeTenantId}_${currentYear}_${activeMonthIdx}`;
+  if (!DB.payments[key]) DB.payments[key] = { abonos: [] };
+  DB.payments[key].abonos.push({ amount, date });
+  saveData(DB);
+  document.getElementById('abono-amount-input').value = '';
+  hideAbonoForm();
+  renderMonthGrid(activeTenantId);
+  renderAbonoHistory(activeTenantId, activeMonthIdx);
+  renderBalance(activeTenantId, activeMonthIdx);
+  showToast(`Abono de ${formatCOP(amount)} registrado`, 'success');
+}
+
+// ─── MODALS ───
+function openModal(id) {
+  if (id === 'modal-add-tenant') {
+    const sel = document.getElementById('new-tenant-prop');
+    sel.innerHTML = DB.properties.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  }
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function addProperty() {
+  const name = document.getElementById('new-prop-name').value.trim();
+  const address = document.getElementById('new-prop-address').value.trim();
+  const rent = parseFloat(document.getElementById('new-prop-rent').value);
+  const color = document.getElementById('new-prop-color').value;
+  if (!name || !address || !rent) { showToast('Completa todos los campos', 'error'); return; }
+  const id = 'p' + Date.now();
+  DB.properties.push({ id, name, address, rent, color });
+  saveData(DB);
+  closeModal('modal-add-prop');
+  document.getElementById('new-prop-name').value = '';
+  document.getElementById('new-prop-address').value = '';
+  document.getElementById('new-prop-rent').value = '';
+  renderProperties();
+  showToast('Propiedad agregada', 'success');
+}
+
+function addTenant() {
+  const name = document.getElementById('new-tenant-name').value.trim();
+  const propId = document.getElementById('new-tenant-prop').value;
+  const rent = parseFloat(document.getElementById('new-tenant-rent').value);
+  const start = document.getElementById('new-tenant-start').value;
+  if (!name || !propId || !rent) { showToast('Completa todos los campos', 'error'); return; }
+  const id = 't' + Date.now();
+  DB.tenants.push({ id, name, propId, rent, startMonth: start || '2025-01' });
+  saveData(DB);
+  closeModal('modal-add-tenant');
+  document.getElementById('new-tenant-name').value = '';
+  document.getElementById('new-tenant-rent').value = '';
+  renderTenantList('tenant-list-main');
+  renderTenantList('tenant-list-pagos');
+  showToast('Inquilino agregado', 'success');
+}
+
+// ─── DASHBOARD ───
+function renderDashboard() {
+  let totalIncome = 0, totalPaid = 0, totalPending = 0;
+  DB.tenants.forEach(t => {
+    for (let m = 0; m < 12; m++) {
+      if (!isMonthActive(t, m)) continue;
+      const key = `${t.id}_${currentYear}_${m}`;
+      const paid = (DB.payments[key]?.abonos || []).reduce((a, b) => a + b.amount, 0);
+      totalIncome += t.rent;
+      totalPaid += paid;
+      totalPending += Math.max(0, t.rent - paid);
+    }
+  });
+  document.getElementById('dash-ingresos').textContent = formatCOP(totalIncome);
+  document.getElementById('dash-cobrado').textContent = formatCOP(totalPaid);
+  document.getElementById('dash-pendiente').textContent = formatCOP(totalPending);
+  document.getElementById('dash-props').textContent = DB.properties.length;
+  renderBarChart();
+}
+
+function renderBarChart() {
+  const chart = document.getElementById('bar-chart');
+  const monthTotals = MONTHS.map((_, m) => {
+    return DB.tenants.reduce((total, t) => {
+      const key = `${t.id}_${currentYear}_${m}`;
+      return total + (DB.payments[key]?.abonos || []).reduce((a, b) => a + b.amount, 0);
+    }, 0);
+  });
+  const max = Math.max(...monthTotals, 1);
+  chart.innerHTML = monthTotals.map((val, i) => {
+    const pct = Math.max(4, Math.round((val / max) * 100));
+    const isCurrent = i === new Date().getMonth() && currentYear === new Date().getFullYear();
+    return `<div class="bar-item">
+      <div class="bar ${isCurrent ? 'active' : ''}" style="height:${pct}%" title="${MONTHS_FULL[i]}: ${formatCOP(val)}"></div>
+      <div class="bar-label">${MONTHS[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── UTILS ───
+function formatCOP(n) {
+  if (!n && n !== 0) return '—';
+  return '$' + Math.round(n).toLocaleString('es-CO');
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type || ''} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function comingSoon() { showToast('Próximamente disponible', ''); }
+
+// Close modals/panels on overlay click
+document.querySelectorAll('.modal-overlay, .panel-overlay').forEach(el => {
+  el.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+    }
+  });
+});
+
+// Init: go to landing
+goToScreen('screen-landing');
+</script>
+</body>
+</html>
